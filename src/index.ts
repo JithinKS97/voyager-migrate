@@ -1,9 +1,12 @@
 import { getContract, getContractList } from "./s3"
+import { executeInParallel } from "./parallel"
+import * as dotenv from "dotenv"
+
+dotenv.config()
 
 const main = async () => {
     const contractList = await getContractList()
-    const sampleContract = await getContract(contractList[0]) 
-    
+    await executeInParallel(getContract, contractList)
 }
 
 main()

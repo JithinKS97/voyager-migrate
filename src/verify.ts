@@ -1,29 +1,47 @@
 import { getContractObject  }  from "./s3"
+import { verifyContractOrClass } from "./api"
 
 export const verify = async (key:string) => {
     const contract = await getContractObject(key)
-    let files, contractDetails;
+    const address = getAddress(key)
+    let files, contractDetails, otherDetails
     if(isContractObjectOnlyCode(contract)){
         files = getFilesForOnlyCode(contract)
-        contractDetails = getContractDetailsForOnlyCode(contract)
-    } else if(isCodePropertyArray(contract)) {
-        files = getFilesForCodeArray(contract)
-        contractDetails = getVerifiedContractNameAndName(contract)
+        contractDetails = getVerifiedContractDetailsForOnlyCode()
+        otherDetails = getOtherDetailsForOnlyCode()
     } else {
-        files = getFilesForCodeObject(contract)
-        contractDetails = getVerifiedContractNameAndName(contract)
+        if(isCodePropertyArray(contract)) {
+            files = getFilesForCodeArray(contract)
+        } else {
+            files = getFilesForCodeObject(contract)
+        }
+        contractDetails = getVerifiedContractDetails(contract)
+        otherDetails = getOtherDetails(contract)
     }
+    await verifyContractOrClass(
+        address,
+        otherDetails.compilerVersion,
+        otherDetails.license,
+        otherDetails.accountContract,
+        contractDetails.name,
+        contractDetails.path,
+        files
+    )
+}
+
+const getAddress = (key) => {
+    return key.split('contract_by_address_')[1]
 }
 
 const getFilesForOnlyCode = (contract) => {
     const files = [{
-        name:'contract.cairo',
+        path:'contract.cairo',
         content: contract.join('\n'),
     }]
     return files
 }
 
-const getContractDetailsForOnlyCode = (contract) => {
+const getVerifiedContractDetailsForOnlyCode = () => {
     const contractDetails = {
         name:'contract',
         path:'contract.cairo',
@@ -31,22 +49,30 @@ const getContractDetailsForOnlyCode = (contract) => {
     return contractDetails
 }
 
+const getOtherDetailsForOnlyCode = () => {
+    const otherDetails = {
+        compilerVersion: null,
+        accountContract: false,
+        license: 'No License (None)',
+    }
+    return otherDetails;
+}
+
 const getFilesForCodeArray = (contract) => {
     const content = contract.code.join('\n')
     const files = [{
-        name: getVerifiedContractName(contract),
+        path: getVerifiedContractName(contract),
         content,
     }]
     return files
 }
-
 
 const getFilesForCodeObject = (contract) => {
     const fileNames = Object.keys(contract.code)
     const files = []
     for(let fileName of fileNames) {
         const file = {
-            name: fileName,
+            path: fileName,
             content: contract.code[fileName].join('\n'),
         }
         files.push(file)
@@ -54,12 +80,21 @@ const getFilesForCodeObject = (contract) => {
     return files
 }
 
-const getVerifiedContractNameAndName = (contract) => {
-    const verifiedContractName = getVerifiedContractName(contract)
+const getVerifiedContractDetails = (contract) => {
+    const path = getVerifiedContractName(contract)
     let name = getName(contract)
     return {
-        verifiedContractName,
+        path,
         name
+    }
+}
+
+
+const getOtherDetails = (contract) => {
+    return {
+        compilerVersion: contract.compilerVersion || null,
+        accountContract: false,
+        license: contract.license || 'No License (None)',
     }
 }
 
@@ -72,6 +107,7 @@ const getName = (contract) => {
     let name = contract.name
     if(!name) {
         name = verifiedContractName.split('.')[0]
+        name = name.split('/').pop()
     }
     return name;
 }
@@ -87,26 +123,3 @@ const isArray = (element) => {
 const isCodePropertyArray = (contract) => {
     return isArray(contract.code)
 }
-
-/**
- * Different types of contract
- * 1. code is a an array of one element
- *    contract-name and name is not present
- * 
- * 2. code is a dictionary with multiple files
- *    contract-name and name is present
- * 
- * 3. code is an array of one element
- *    contract-name is present, but name is not present
- * 
- * 4. code is an array of multiple files
- *    contract-name is not present, name is also not present  
- * 
- * 5. code is a dictionary with multiple files
- *    contract-name is not present, name is also not present
- * 
- * 6. Just an array of code with single element
- * 
- * 7. code is an array of one file
- *    contract-name is present, name is also present
- */

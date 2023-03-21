@@ -7,7 +7,7 @@ dotenv.config()
 
 const main = async () => {
     const contractList = await getContractList()
-    verify(contractList[1])
+    const result = await verify(contractList[1])
     // await executeInParallel(verify, contractList)
 }
 

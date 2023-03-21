@@ -1,5 +1,5 @@
-import * as dotenv from "dotenv"
 import * as AWS from "aws-sdk"
+import { CURRENT_BUCKET_NAME_BY_NETWORK } from "./constants"
 
 const prefix = "contract_by_address_"
 
@@ -13,7 +13,7 @@ const s3 = new AWS.S3({
 export const getContractList = async () => {
   const result = await s3
   .listObjects({
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: CURRENT_BUCKET_NAME_BY_NETWORK,
     Prefix: prefix,
   })
   .promise()
@@ -23,7 +23,7 @@ export const getContractList = async () => {
 export const getContractObject = async (key: string) => {
   const result = await s3
   .getObject({
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: CURRENT_BUCKET_NAME_BY_NETWORK,
     Key: key,
   })
   .promise()

@@ -6,7 +6,7 @@ const verify_1 = require("./verify");
 dotenv.config();
 const main = async () => {
     const contractList = await (0, s3_1.getContractList)();
-    (0, verify_1.verify)(contractList[1]);
+    const result = await (0, verify_1.verify)(contractList[1]);
     // await executeInParallel(verify, contractList)
 };
 main();

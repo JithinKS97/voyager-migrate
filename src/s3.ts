@@ -20,7 +20,7 @@ export const getContractList = async () => {
   return result.Contents.map((content) => content.Key)
 }
 
-export const getContract = async (key: string) => {
+export const getContractObject = async (key: string) => {
   const result = await s3
   .getObject({
     Bucket: process.env.S3_BUCKET_NAME,

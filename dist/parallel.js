@@ -9,7 +9,6 @@ const executeInParallel = async (fn, args) => {
         const promises = getArrayOfPromises(fn, chunk);
         const results = await Promise.all(promises);
         finalResults.push(...results);
-        console.log(results);
     }
     return finalResults;
 };

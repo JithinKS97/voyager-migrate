@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getContract = exports.getContractList = void 0;
+exports.getContractObject = exports.getContractList = void 0;
 const AWS = require("aws-sdk");
 const prefix = "contract_by_address_";
 const s3 = new AWS.S3({
@@ -19,7 +19,7 @@ const getContractList = async () => {
     return result.Contents.map((content) => content.Key);
 };
 exports.getContractList = getContractList;
-const getContract = async (key) => {
+const getContractObject = async (key) => {
     const result = await s3
         .getObject({
         Bucket: process.env.S3_BUCKET_NAME,
@@ -28,5 +28,5 @@ const getContract = async (key) => {
         .promise();
     return JSON.parse(result.Body.toString());
 };
-exports.getContract = getContract;
+exports.getContractObject = getContractObject;
 //# sourceMappingURL=s3.js.map

@@ -3,6 +3,7 @@ import { verifyContractOrClass } from "./api"
 
 export const verify = async (key:string) => {
     const contract = await getContractObject(key)
+    if(!contract) return
     const address = getAddress(key)
     let files, contractDetails, otherDetails
     if(isContractObjectOnlyCode(contract)){
@@ -31,7 +32,7 @@ export const verify = async (key:string) => {
     )
 }
 
-const getAddress = (key) => {
+export const getAddress = (key) => {
     return key.split('contract_by_address_')[1]
 }
 

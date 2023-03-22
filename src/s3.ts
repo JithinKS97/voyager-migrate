@@ -1,5 +1,7 @@
 import * as AWS from "aws-sdk"
 import { CURRENT_BUCKET_NAME_BY_NETWORK } from "./constants"
+import { addLog } from "./log"
+import { getAddress } from "./verify"
 
 const prefix = "contract_by_address_"
 
@@ -21,11 +23,19 @@ export const getContractList = async () => {
 }
 
 export const getContractObject = async (key: string) => {
-  const result = await s3
-  .getObject({
-    Bucket: CURRENT_BUCKET_NAME_BY_NETWORK,
-    Key: key,
-  })
-  .promise()
-  return JSON.parse(result.Body.toString())
+  let result;
+  try {
+    result = await s3
+    .getObject({
+      Bucket: CURRENT_BUCKET_NAME_BY_NETWORK,
+      Key: key,
+    })
+    .promise()
+    return JSON.parse(result.Body.toString())
+  } catch(err) {
+    const log = `${getAddress(key)}: Unable to parse: ${result.Body.toString()} `
+    console.log(log)
+    addLog(log)
+    return false
+  }
 }

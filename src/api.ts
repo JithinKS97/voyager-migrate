@@ -1,16 +1,24 @@
 import axios from "axios";
 import { CURRENT_URL_BY_NETWORK, COMPILER_VERSIONS } from "./constants"
+import { addLog } from "./log";
+import { generateResponse } from "./utils";
 
 export const verifyContractOrClass = async (
     verificationDetails
 ) => {
     const { version, address } = verificationDetails;
+    let result = null;
     if(version === null) {
         console.log(`${address}: Version is null, trying all versions`)
-        await tryWithAllCompilerVersions(verificationDetails)
-        return;
+        result = await tryWithAllCompilerVersions(verificationDetails)
+    } else {
+        result = await verify(verificationDetails);
     }
-    verify(verificationDetails);
+    if(result.error) {
+        addLog(`${address}: ${result.message}`)
+    } else {
+        console.log(`${address}: ${result.message}`)
+    }
 };
 
 const createFormData = ({
@@ -52,16 +60,10 @@ const verify = async (verificationDetails) => {
             },
         });
         if (result.status === 200) {
-            console.log(`${address}: success`)
-            return true
+            return generateResponse(false, `Verified`)
         }
     } catch (error) {
-        if(!error.response.data.message) {
-            console.log(`${address}: Failed due to ${error.response.data}`)
-        } else {
-            console.log(`${address}: Failed due to ${error.response.data.message}`)
-        }
-        return false    
+        return generateResponse(true, JSON.stringify(error.response.data))
     }
 }
 
@@ -72,11 +74,11 @@ const tryWithAllCompilerVersions = async (verificationDetails) => {
         const version = compilerVersions[i];
         console.log(`${address}: Trying with version ${version}`)
         verificationDetails.version = version;
-        const isSuccess = await verify(verificationDetails);
-        if(isSuccess) {
+        const result = await verify(verificationDetails);
+        if(!result.error) {
             console.log(`${address}: Success with ${version}`)
-            return;
+            return generateResponse(false, `Verified with ${version}`)
         }
     }
-    console.log(`${address}: No version is suppported`)
+    return generateResponse(true, `Failed with all versions`)
 }

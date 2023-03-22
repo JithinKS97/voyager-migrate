@@ -18,31 +18,25 @@ export const verifyContractOrClass = async (
     formData.append("name", name);
     formData.append("contract-name", contractPath);
 
-    // console.log(address, version, license, isAccount, name, contractPath, files)
 
     Array.from({ length: files.length }).forEach((_, index) => {
-        const details = JSON.stringify({
-            filename: files[index].path,
-            filepath: files[index].path,
-        })
         const filesBlob = new Blob([files[index].content], { type : 'plain/text' })
-        formData.append(`file${index}`, filesBlob, details);
+        formData.append(`file${index}`, filesBlob, files[index].path);
     });
-  
     try {
         const result = await axios({
         method: "post",
         url: `${CURRENT_URL_BY_NETWORK}/api/contract/${address}/code`,
         data: formData,
         headers: {
-                //@ts-ignore
-                "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+                "Content-Type": `multipart/form-data;`,
                 "Accept-Encoding": "gzip,deflate,compress",
             },
         });
-        // console.log(result)
+        if(result.status === 200) {
+            console.log('verified contract')
+        }
     } catch (error) {
         console.log('failed to verify contract')
-        // console.log(error)
     }
   };

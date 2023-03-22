@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CURRENT_URL_BY_NETWORK, COMPILER_VERSIONS } from "./constants"
-import { addLog } from "./log";
+import { addLog, addToVerifiedList } from "./log";
 import { generateResponse } from "./utils";
 
 export const verifyContractOrClass = async (
@@ -16,8 +16,10 @@ export const verifyContractOrClass = async (
     }
     if(result.error) {
         addLog(`${address}: ${result.message}`)
+        return null
     } else {
         console.log(`${address}: ${result.message}`)
+        return address
     }
 };
 

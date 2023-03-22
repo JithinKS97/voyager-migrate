@@ -19,7 +19,7 @@ export const verify = async (key:string) => {
         contractDetails = getVerifiedContractDetails(contract)
         otherDetails = getOtherDetails(contract)
     }
-    await verifyContractOrClass(
+    return await verifyContractOrClass(
         {
             address,
             version: otherDetails.compilerVersion,

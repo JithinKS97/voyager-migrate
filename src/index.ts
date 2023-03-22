@@ -9,7 +9,7 @@ dotenv.config()
 const main = async () => {
     const contractList = await getContractList()
     const contractListToVerify = getContractsToVerify(contractList)
-    console.log(`no of contracts to verify: ${contractListToVerify.length}`)
+    console.log(`No of contracts to verify: ${contractListToVerify.length}`)
     await executeInParallel(verify, contractList)
 }
 

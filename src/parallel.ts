@@ -4,11 +4,13 @@ import { addToVerifiedList } from "./log"
 export const executeInParallel = async (fn, args) => {
     const chunks = _.chunk(args, process.env.CHUNK_SIZE)
     const finalResults = []
+    let i = 0;
     for(const chunk of chunks) {
         const promises = getArrayOfPromises(fn, chunk)
         const results = await Promise.all(promises)
         addToVerifiedList(results)
         finalResults.push(...results)
+        console.log(`Completed ${++i} of ${chunks.length} chunks`)
         console.log("")
     }
     return finalResults

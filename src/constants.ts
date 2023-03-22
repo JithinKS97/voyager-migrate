@@ -14,12 +14,12 @@ const URL_BY_NETWORKS = {
 
 const BUCKET_NAMES_BY_NETWORK = {
     goerli:'voyager-goerli-caching',
-    goerli2:'voyager-goerli2-caching',
+    goerli2:'voyager-goerli-2-caching',
     mainnet: 'voyager-mainnet-caching',
     integration: 'voyager-goerli-caching'
 }
 
-export const CURRENT_NETWORK = NETWORK.goerli
+export const CURRENT_NETWORK = NETWORK.goerli2
 export const CURRENT_URL_BY_NETWORK = URL_BY_NETWORKS[CURRENT_NETWORK]
 export const CURRENT_BUCKET_NAME_BY_NETWORK = BUCKET_NAMES_BY_NETWORK[CURRENT_NETWORK]
 

@@ -10,7 +10,7 @@ const main = async () => {
     const contractList = await getContractList()
     const contractListToVerify = getContractsToVerify(contractList)
     console.log(`No of contracts to verify: ${contractListToVerify.length}`)
-    await executeInParallel(verify, contractList)
+    await executeInParallel(verify, contractListToVerify)
 }
 
 main()

@@ -19,13 +19,15 @@ export const verify = async (key:string) => {
         otherDetails = getOtherDetails(contract)
     }
     await verifyContractOrClass(
-        address,
-        otherDetails.compilerVersion,
-        otherDetails.license,
-        otherDetails.accountContract,
-        contractDetails.name,
-        contractDetails.path,
-        files
+        {
+            address,
+            version: otherDetails.compilerVersion,
+            license: otherDetails.license,
+            isAccount: otherDetails.accountContract,
+            name: contractDetails.name,
+            contractPath: contractDetails.path,
+            files
+        }
     )
 }
 

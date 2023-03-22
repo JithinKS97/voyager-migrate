@@ -22,3 +22,19 @@ const BUCKET_NAMES_BY_NETWORK = {
 export const CURRENT_NETWORK = NETWORK.goerli
 export const CURRENT_URL_BY_NETWORK = URL_BY_NETWORKS[CURRENT_NETWORK]
 export const CURRENT_BUCKET_NAME_BY_NETWORK = BUCKET_NAMES_BY_NETWORK[CURRENT_NETWORK]
+
+
+export const COMPILER_VERSIONS = [
+    "0.6.1",
+    "0.6.2",
+    "0.7.0",
+    "0.7.1",
+    "0.8.0",
+    "0.8.1",
+    "0.8.2",
+    "0.9.0",
+    "0.9.1",
+    "0.10.1",
+    "0.10.2",
+    "0.10.3",
+]

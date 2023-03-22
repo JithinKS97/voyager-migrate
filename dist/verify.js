@@ -22,7 +22,15 @@ const verify = async (key) => {
         contractDetails = getVerifiedContractDetails(contract);
         otherDetails = getOtherDetails(contract);
     }
-    await (0, api_1.verifyContractOrClass)(address, otherDetails.compilerVersion, otherDetails.license, otherDetails.accountContract, contractDetails.name, contractDetails.path, files);
+    await (0, api_1.verifyContractOrClass)({
+        address,
+        version: otherDetails.compilerVersion,
+        license: otherDetails.license,
+        isAccount: otherDetails.accountContract,
+        name: contractDetails.name,
+        contractPath: contractDetails.path,
+        files
+    });
 };
 exports.verify = verify;
 const getAddress = (key) => {

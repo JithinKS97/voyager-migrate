@@ -19,7 +19,7 @@ const BUCKET_NAMES_BY_NETWORK = {
     integration: 'voyager-goerli-caching'
 }
 
-export const CURRENT_NETWORK = NETWORK.goerli2
+export const CURRENT_NETWORK = NETWORK.goerli
 export const CURRENT_URL_BY_NETWORK = URL_BY_NETWORKS[CURRENT_NETWORK]
 export const CURRENT_BUCKET_NAME_BY_NETWORK = BUCKET_NAMES_BY_NETWORK[CURRENT_NETWORK]
 
